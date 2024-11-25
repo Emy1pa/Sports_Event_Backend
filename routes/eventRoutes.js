@@ -5,6 +5,7 @@ const {
   createEvent,
   getAllEvents,
   getEventById,
+  updateEvent,
 } = require("../controllers/eventController");
 const {
   verifyOrganizerToken,
@@ -20,4 +21,5 @@ router.post(
 );
 router.get("/", verifyTokenAndAuthorization, getAllEvents);
 router.get("/:id", verifyTokenAndAuthorization, getEventById);
+router.put("/:id", verifyOrganizerToken, updateEvent);
 module.exports = router;
