@@ -1,0 +1,43 @@
+### User Registration
+POST http://localhost:8800/api/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Johny Clara",
+  "email": "souaouti.imane1@gmail.com",
+  "password": "StrongP@ssw0rd123!"
+}
+
+### User Login
+POST http://localhost:8800/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "souaouti.iman@gmail.com",
+  "password": "StrongP@ssw0rd123!"
+}
+
+### Update User (Requires Authentication Token)
+PUT http://localhost:8800/api/auth/user/67448487e575c609c63bc4d4
+Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDg3ZTU3NWM2MDljNjNiYzRkNCIsInJvbGUiOiJQYXJ0aWNpcGFudCIsImlhdCI6MTczMjU0NjQ4OX0.Ei7r8wQZpi74z-CAdidWOVHDAm0PabTKNdWWIAAzptk
+
+{
+  "fullName": "John Updated"
+}
+
+### Get All Users (Organizer Only)
+GET http://localhost:8800/api/auth/users
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NDY1NTV9.pBNFn1_nztvewFgp3kXfrSEyT1poFGraqNyVsq4sNlM
+
+### Get User by ID (Organizer Only)
+GET http://localhost:8800/api/auth/user/67448487e575c609c63bc4d4
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NDY1NTV9.pBNFn1_nztvewFgp3kXfrSEyT1poFGraqNyVsq4sNlM
+
+### Delete User (Organizer Only)
+DELETE http://localhost:8800/api/auth/user/67448487e575c609c63bc4d4
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NDY1NTV9.pBNFn1_nztvewFgp3kXfrSEyT1poFGraqNyVsq4sNlM
+
+### Logout
+POST http://localhost:5000/api/auth/logout/userId
+token: authToken
