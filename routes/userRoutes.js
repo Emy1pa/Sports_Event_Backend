@@ -33,5 +33,4 @@ router.post(
   verifyTokenAndAuthorization,
   logOut
 );
-
 module.exports = router;
