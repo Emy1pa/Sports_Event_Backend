@@ -30,7 +30,6 @@ async function register(req, res) {
     res.status(500).json({ message: "Something went Wrong" });
   }
 }
-
 async function login(req, res) {
   try {
     const { error } = validateLoginUser(req.body);
@@ -139,13 +138,12 @@ async function logOut(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
-
 module.exports = {
   register,
   login,
   updateUser,
   getAllUsers,
   getUserById,
-  deleteUser,
   logOut,
+  deleteUser,
 };

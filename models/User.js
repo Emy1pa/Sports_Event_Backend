@@ -44,7 +44,6 @@ function validateRegisterUser(obj) {
   });
   return schema.validate(obj);
 }
-
 function validateLoginUser(obj) {
   const schema = Joi.object({
     email: Joi.string().trim().min(5).max(100).required().email(),
@@ -60,6 +59,7 @@ function validateUpdateUser(obj) {
   });
   return schema.validate(obj);
 }
+
 UserSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     {
