@@ -5,9 +5,18 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNi
 
 
 {
-  "title": "Sample Event Title",
-  "description": "This is a description of the sample event.",
+  "title": "Sample Event Title 2",
+  "description": "This is a description of the sample event 2.",
   "location": "123 Sample Street, Sample City",
   "date": "2024-11-31T18:00:00Z"
 }
+
+### Get All Events
+GET  http://localhost:8800/api/events
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
+
+
+### Get Single Event
+GET  http://localhost:8800/api/events/6744e04918bd699001fe9241
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
 

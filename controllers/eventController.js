@@ -54,4 +54,24 @@ const createEvent = async (req, res) => {
   }
 };
 
-module.exports = { createEvent };
+async function getAllEvents(req, res) {
+  try {
+    const events = await Event.find();
+    res.status(200).json(events);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+async function getEventById(req, res) {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (event) res.status(200).json(event);
+    else res.status(404).json({ message: "Event notFound " });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+
+module.exports = { createEvent, getAllEvents, getEventById };

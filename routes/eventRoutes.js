@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { createEvent } = require("../controllers/eventController");
+const {
+  createEvent,
+  getAllEvents,
+  getEventById,
+} = require("../controllers/eventController");
 const {
   verifyOrganizerToken,
   verifyTokenAndAuthorization,
@@ -14,5 +18,6 @@ router.post(
   upload.fields([{ name: "image", maxCount: 1 }]),
   createEvent
 );
-
+router.get("/", verifyTokenAndAuthorization, getAllEvents);
+router.get("/:id", verifyTokenAndAuthorization, getEventById);
 module.exports = router;
