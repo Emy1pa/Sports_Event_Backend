@@ -42,3 +42,48 @@ describe("Password Hashing", () => {
     expect(isMatch).toBe(true);
   });
 });
+
+describe("User Login Validation", () => {
+  it("should validate a valid user login", () => {
+    const validLogin = {
+      email: "john.doe@gmail.com",
+      password: "StrongPass123!",
+    };
+    const { error } = validateLoginUser(validLogin);
+    expect(error).toBeUndefined();
+  });
+  it("should return an error for invalid email format", () => {
+    const invalidEmail = {
+      email: "invalid-email",
+      password: "StrongPass123!",
+    };
+    const { error } = validateLoginUser(invalidEmail);
+    expect(error).toBeDefined();
+    expect(error.details[0].message).toContain("email");
+  });
+  it("should return an error for invalid password format", () => {
+    const invalidPassword = {
+      email: "john.doe@gmail.com",
+      password: "12",
+    };
+    const { error } = validateLoginUser(invalidPassword);
+    expect(error).toBeDefined();
+    expect(error.details[0].message).toContain("password");
+  });
+  it("should return an error for missing email", () => {
+    const missingEmail = {
+      password: "StrongPass123",
+    };
+    const { error } = validateLoginUser(missingEmail);
+    expect(error).toBeDefined();
+    expect(error.details[0].message).toContain("email");
+  });
+  it("should return an error for missing password", () => {
+    const missingPassword = {
+      email: "john.doe@gmail.com",
+    };
+    const { error } = validateLoginUser(missingPassword);
+    expect(error).toBeDefined();
+    expect(error.details[0].message).toContain("password");
+  });
+});
