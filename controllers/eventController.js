@@ -6,7 +6,11 @@ const {
   cloudinaryRemoveImage,
 } = require("../utils/cloudinary");
 
-const { Event, validateEvent } = require("../models/Event");
+const {
+  Event,
+  validateEvent,
+  validateUpdateEvent,
+} = require("../models/Event");
 
 const createEvent = async (req, res) => {
   try {
@@ -73,5 +77,43 @@ async function getEventById(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
-
-module.exports = { createEvent, getAllEvents, getEventById };
+async function updateEvent(req, res) {
+  try {
+    const { error } = validateUpdateEvent(req.body);
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
+    let updateEvent = { ...req.body };
+    const existingEvent = await Event.findById(req.params.id);
+    if (!existingEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    if (req.file) {
+      const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
+      const result = await cloudinaryUploadImage(imagePath);
+      updateEvent.image = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+      fs.unlinkSync(imagePath);
+      if (existingEvent.image && existingEvent.image.publicId) {
+        await cloudinaryRemoveImage(existingEvent);
+      }
+    }
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: updateEvent,
+      },
+      { new: true }
+    );
+    if (updatedEvent) {
+      res.status(200).json(updatedEvent);
+    } else {
+      res.status(404).json({ message: "Event not found or failed to update" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+module.exports = { createEvent, getAllEvents, getEventById, updateEvent };

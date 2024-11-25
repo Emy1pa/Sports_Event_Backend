@@ -20,3 +20,12 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNi
 GET  http://localhost:8800/api/events/6744e04918bd699001fe9241
 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
 
+### Event Update (Organizer Only)
+PUT  http://localhost:8800/api/events/6744e04918bd699001fe9241
+Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
+
+
+{
+  "title": "Sample Event Title."
+}
