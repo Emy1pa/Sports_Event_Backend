@@ -1,0 +1,13 @@
+### Event Creation (Organizer Only)
+POST http://localhost:8800/api/events
+Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
+
+
+{
+  "title": "Sample Event Title",
+  "description": "This is a description of the sample event.",
+  "location": "123 Sample Street, Sample City",
+  "date": "2024-11-31T18:00:00Z"
+}
+
