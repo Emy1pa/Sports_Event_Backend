@@ -29,3 +29,7 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNi
 {
   "title": "Sample Event Title."
 }
+
+### Delete Event (Organizer Only)
+DELETE http://localhost:8800/api/events/6744e04918bd699001fe9241
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NDY1NTV9.pBNFn1_nztvewFgp3kXfrSEyT1poFGraqNyVsq4sNlM

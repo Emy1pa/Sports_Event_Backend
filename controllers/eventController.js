@@ -116,4 +116,24 @@ async function updateEvent(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
-module.exports = { createEvent, getAllEvents, getEventById, updateEvent };
+async function deleteEvent(req, res) {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+    if (event.image.publicId) {
+      await cloudinaryRemoveImage(event.image.publicId);
+    }
+    await event.deleteOne();
+    res.status(200).json({ message: "Event has been deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
+module.exports = {
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent,
+};
