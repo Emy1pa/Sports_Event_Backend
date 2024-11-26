@@ -8,7 +8,26 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNi
   "title": "Sample Event Title 2",
   "description": "This is a description of the sample event 2.",
   "location": "123 Sample Street, Sample City",
-  "date": "2024-11-31T18:00:00Z"
+  "date": "2024-11-31T18:00:00Z",
+  "participants": [
+    "674637e20c77d673280c453f",
+    "674490cf763da06a8902005f"
+  ], 
+  "maxParticipants": 100
+}
+
+### Event Update (Organizer Only)
+PUT http://localhost:8800/api/events/674638d44c62b4de423d3ab7
+Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNiYzRkMSIsInJvbGUiOiJPcmdhbmlzYXRldXIiLCJpYXQiOjE3MzI1NjY3NTV9.Aqw4SAr54lVBXR1e3WhHisd-RsJB482eHxCto8-QsD0
+
+
+{
+  
+  "participants": [
+    "67463c66b7233f8ef46f3128"
+  ], 
+  "maxParticipants": 150
 }
 
 ### Get All Events
