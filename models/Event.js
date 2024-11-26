@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
-const { validateUpdateUser } = require("./User");
 
 const EventSchema = new mongoose.Schema(
   {
@@ -35,6 +34,17 @@ const EventSchema = new mongoose.Schema(
     date: {
       type: Date,
       required: true,
+    },
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        unique: true,
+      },
+    ],
+    maxParticipants: {
+      type: Number,
+      default: null,
     },
   },
   {
@@ -73,6 +83,8 @@ function validateEvent(event) {
       "date.greater": "Date must be in the future.",
       "any.required": "Date is required.",
     }),
+    participants: Joi.array().items(Joi.string()).optional(),
+    maxParticipants: Joi.number().min(1).optional(),
   });
   return schema.validate(event);
 }
@@ -106,6 +118,8 @@ function validateUpdateEvent(event) {
       "date.base": "Date must be a valid date.",
       "date.greater": "Date must be in the future.",
     }),
+    participants: Joi.array().items(Joi.string()).optional(),
+    maxParticipants: Joi.number().min(1).optional(),
   });
   return schema.validate(event);
 }

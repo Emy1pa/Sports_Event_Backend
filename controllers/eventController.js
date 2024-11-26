@@ -22,6 +22,8 @@ const createEvent = async (req, res) => {
       description: req.body.description,
       location: req.body.location,
       date: req.body.date,
+      participants: req.body.participants || [],
+      maxParticipants: req.body.maxParticipants,
     };
     const event = new Event(eventData);
     if (req.files && req.files.image) {
@@ -60,7 +62,7 @@ const createEvent = async (req, res) => {
 
 async function getAllEvents(req, res) {
   try {
-    const events = await Event.find();
+    const events = await Event.find().populate("participants", "name email");
     if (events.length === 0) {
       return res.status(404).json({ message: "No events found." });
     }
@@ -72,9 +74,12 @@ async function getAllEvents(req, res) {
 }
 async function getEventById(req, res) {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id).populate(
+      "participants",
+      "name email"
+    );
     if (event) res.status(200).json(event);
-    else res.status(404).json({ message: "Event notFound " });
+    else res.status(404).json({ message: "Event not Found " });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
@@ -90,6 +95,7 @@ async function updateEvent(req, res) {
     if (!existingEvent) {
       return res.status(404).json({ message: "Event not found" });
     }
+
     if (req.file) {
       const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
       const result = await cloudinaryUploadImage(imagePath);
