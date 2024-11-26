@@ -78,8 +78,11 @@ const createEvent = async (req, res) => {
 
 async function getAllEvents(req, res) {
   try {
-    const events = await Event.find().populate("participants", "name email");
-    if (events.length === 0) {
+    const events = await Event.find().populate(
+      "participants",
+      "fullName email"
+    );
+    if (!events || events.length === 0) {
       return res.status(404).json({ message: "No events found." });
     }
     return res.status(200).json(events);
@@ -92,7 +95,7 @@ async function getEventById(req, res) {
   try {
     const event = await Event.findById(req.params.id).populate(
       "participants",
-      "name email"
+      "fullName email"
     );
     if (event) res.status(200).json(event);
     else res.status(404).json({ message: "Event not Found " });
