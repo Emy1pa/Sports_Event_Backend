@@ -31,4 +31,20 @@ describe("Event Validation", () => {
     expect(error).toBeDefined();
     expect(error.details[0].message).toContain("description");
   });
+  it("should validate a validate event update", () => {
+    const validUpdate = {
+      title: "event updated",
+      description: "event description updated",
+    };
+    const { error } = validateUpdateEvent(validUpdate);
+    expect(error).toBeUndefined();
+  });
+  it("should return an error for invalid title in event", () => {
+    const invalidUpdate = {
+      title: "",
+    };
+    const { error } = validateUpdateEvent(invalidUpdate);
+    expect(error).toBeDefined();
+    expect(error.details[0].message).toContain("Title");
+  });
 });
