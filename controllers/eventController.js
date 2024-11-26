@@ -61,7 +61,10 @@ const createEvent = async (req, res) => {
 async function getAllEvents(req, res) {
   try {
     const events = await Event.find();
-    res.status(200).json(events);
+    if (events.length === 0) {
+      return res.status(404).json({ message: "No events found." });
+    }
+    return res.status(200).json(events);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
@@ -120,7 +123,7 @@ async function deleteEvent(req, res) {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: "Event not found" });
-    if (event.image.publicId) {
+    if (event.image && event.image.publicId) {
       await cloudinaryRemoveImage(event.image.publicId);
     }
     await event.deleteOne();
