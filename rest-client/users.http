@@ -3,8 +3,8 @@ POST http://localhost:8800/api/auth/register
 Content-Type: application/json
 
 {
-  "fullName": "Johny Clara",
-  "email": "souaouti.imane1@gmail.com",
+  "fullName": "Parody clara",
+  "email": "iparodt@gmail.com",
   "password": "StrongP@ssw0rd123!"
 }
 

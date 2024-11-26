@@ -1,5 +1,4 @@
 const path = require("path");
-
 const fs = require("fs");
 const {
   cloudinaryUploadImage,
@@ -11,12 +10,29 @@ const {
   validateEvent,
   validateUpdateEvent,
 } = require("../models/Event");
-
+const mongoose = require("mongoose");
+const { User } = require("../models/User");
 const createEvent = async (req, res) => {
   try {
     const { error } = validateEvent(req.body);
     if (error)
       return res.status(400).json({ message: error.details[0].message });
+    if (req.body.participants) {
+      const participantErrors = [];
+      for (const participantId of req.body.participants) {
+        const user = await User.findById(participantId);
+        if (!user || user.role !== "Participant") {
+          participantErrors.push(participantId);
+        }
+      }
+      if (participantErrors.length > 0) {
+        return res.status(400).json({
+          message: `Invalid participants: ${participantErrors.join(
+            ", "
+          )}. Only users with participant role can be added.`,
+        });
+      }
+    }
     const eventData = {
       title: req.body.title,
       description: req.body.description,
@@ -95,7 +111,22 @@ async function updateEvent(req, res) {
     if (!existingEvent) {
       return res.status(404).json({ message: "Event not found" });
     }
-
+    if (req.body.participants) {
+      const participantErrors = [];
+      for (const participantId of req.body.participants) {
+        const user = await User.findById(participantId);
+        if (!user || user.role !== "Participant") {
+          participantErrors.push(participantId);
+        }
+      }
+      if (participantErrors.length > 0) {
+        return res.status(400).json({
+          message: `Invalid participants: ${participantErrors.join(
+            ", "
+          )}. Only users with participant role can be added.`,
+        });
+      }
+    }
     if (req.file) {
       const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
       const result = await cloudinaryUploadImage(imagePath);
@@ -114,7 +145,7 @@ async function updateEvent(req, res) {
         $set: updateEvent,
       },
       { new: true }
-    );
+    ).populate("participants", "name email");
     if (updatedEvent) {
       res.status(200).json(updatedEvent);
     } else {
@@ -125,6 +156,7 @@ async function updateEvent(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
+
 async function deleteEvent(req, res) {
   try {
     const event = await Event.findById(req.params.id);
