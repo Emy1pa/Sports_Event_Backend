@@ -12,6 +12,7 @@ const {
 } = require("../models/Event");
 const mongoose = require("mongoose");
 const { User } = require("../models/User");
+const PDFDocument = require("pdfkit");
 const createEvent = async (req, res) => {
   try {
     const { error } = validateEvent(req.body);
@@ -174,10 +175,63 @@ async function deleteEvent(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
+async function generateEventsPDF(req, res) {
+  try {
+    const events = await Event.find()
+      .populate("participants", "fullname email")
+      .exec();
+
+    if (!events || events.length === 0) {
+      return res.status(404).json({ message: "No events found." });
+    }
+
+    const doc = new PDFDocument();
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=events.pdf");
+
+    doc.pipe(res);
+
+    doc
+      .fontSize(18)
+      .text("Liste des événements et participants", { align: "center" });
+    doc.moveDown();
+
+    events.forEach((event, index) => {
+      doc.fontSize(14).text(`Événement ${index + 1}: ${event.title}`);
+      doc.fontSize(12).text(`Description: ${event.description}`);
+      doc.text(`Lieu: ${event.location}`);
+      doc.text(`Date: ${new Date(event.date).toLocaleDateString()}`);
+      doc.text(
+        `Participants (${event.participants.length}/${event.maxParticipants}):`
+      );
+      doc.moveDown(0.5);
+
+      if (event.participants.length > 0) {
+        event.participants.forEach((participant, pIndex) => {
+          doc.text(
+            `${pIndex + 1}. ${participant.fullname} (${participant.email})`,
+            { indent: 20 }
+          );
+        });
+      } else {
+        doc.text("Aucun participant", { indent: 20 });
+      }
+
+      doc.moveDown();
+    });
+
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+}
 module.exports = {
   createEvent,
   getAllEvents,
   getEventById,
   updateEvent,
   deleteEvent,
+  generateEventsPDF,
 };
