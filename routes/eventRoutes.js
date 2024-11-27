@@ -7,6 +7,8 @@ const {
   getEventById,
   updateEvent,
   deleteEvent,
+  generateEventsPDF,
+  generatePdf,
 } = require("../controllers/eventController");
 const {
   verifyOrganizerToken,
@@ -24,4 +26,5 @@ router.get("/", verifyTokenAndAuthorization, getAllEvents);
 router.get("/:id", verifyTokenAndAuthorization, getEventById);
 router.put("/:id", verifyOrganizerToken, updateEvent);
 router.delete("/:id", verifyOrganizerToken, deleteEvent);
+router.get("/pdf", verifyOrganizerToken, generateEventsPDF);
 module.exports = router;
