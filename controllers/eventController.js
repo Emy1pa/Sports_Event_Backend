@@ -94,21 +94,7 @@ async function getAllEvents(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
-async function getEventById(req, res) {
-  try {
-    const { eventId } = req.params;
-    console.log("Event ID received in backend:", eventId);
-    const event = await Event.findById(req.params.id).populate(
-      "participants",
-      "fullName email"
-    );
-    if (event) res.status(200).json(event);
-    else res.status(404).json({ message: "Event not Found " });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
-  }
-}
+
 const updateEvent = async (req, res) => {
   try {
     let participants = Array.isArray(req.body.participants)
@@ -154,7 +140,27 @@ const updateEvent = async (req, res) => {
       .json({ message: "An error occurred", error: error.message });
   }
 };
+async function getEventById(req, res) {
+  try {
+    const { userId, userRole } = req.query;
 
+    if (!userId || !userRole) {
+      return res.status(400).json({ message: "User ID and Role are required" });
+    }
+
+    const events = await Event.find({
+      $or: [{ participants: userId }, { organizer: userId }],
+    }).populate("participants", "fullName email");
+
+    res.status(200).json(events);
+  } catch (error) {
+    console.error("Error fetching participant events:", error);
+    res.status(500).json({
+      message: "Failed to retrieve participant events",
+      error: error.message,
+    });
+  }
+}
 async function deleteEvent(req, res) {
   try {
     const event = await Event.findById(req.params.id);

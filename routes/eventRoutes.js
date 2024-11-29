@@ -13,6 +13,7 @@ const {
 const {
   verifyOrganizerToken,
   verifyTokenAndAuthorization,
+  verifyToken,
 } = require("../middlewares/auth");
 const multer = require("multer");
 const upload = require("../middlewares/photoUpload");
@@ -38,7 +39,7 @@ router.post(
   createEvent
 );
 router.get("/", verifyTokenAndAuthorization, getAllEvents);
-router.get("/:id", verifyTokenAndAuthorization, getEventById);
+router.get("/participant", verifyToken, getEventById);
 router.put(
   "/:id",
   verifyOrganizerToken,

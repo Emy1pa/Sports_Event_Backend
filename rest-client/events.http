@@ -36,7 +36,7 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDQ4NDMxZTU3NWM2MDljNjNi
 
 
 ### Get Single Event
-GET  http://localhost:8800/api/events/674770316f6de24ac454eaa9
+GET  http://localhost:8800/api/events/user-events
 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDc3MDMxNmY2ZGUyNGFjNDU0ZWFhOSIsInJvbGUiOiJQYXJ0aWNpcGFudCIsImlhdCI6MTczMjgzMTk3MH0.R_lYfZpliOT69rC4Ey0Iv83uDaDZYTA8c0pbTVNDbps
 
 ### Event Update (Organizer Only)
