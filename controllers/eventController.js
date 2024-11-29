@@ -48,9 +48,11 @@ const createEvent = async (req, res) => {
         __dirname,
         `../images/${req.files.image[0].filename}`
       );
+      console.log("Image path:", imagePath);
+
       try {
         const result = await cloudinaryUploadImage(imagePath);
-        event.image = {
+        event["image"] = {
           url: result.secure_url,
           publicId: result.public_id,
         };
@@ -83,9 +85,9 @@ async function getAllEvents(req, res) {
       "participants",
       "fullName email"
     );
-    if (!events || events.length === 0) {
-      return res.status(404).json({ message: "No events found." });
-    }
+    // if (!events || events.length === 0) {
+    //   return res.status(404).json({ message: "No events found." });
+    // }
     return res.status(200).json(events);
   } catch (error) {
     console.log(error);
@@ -94,6 +96,8 @@ async function getAllEvents(req, res) {
 }
 async function getEventById(req, res) {
   try {
+    const { eventId } = req.params;
+    console.log("Event ID received in backend:", eventId);
     const event = await Event.findById(req.params.id).populate(
       "participants",
       "fullName email"
@@ -105,67 +109,57 @@ async function getEventById(req, res) {
     res.status(500).json({ message: "Something went wrong" });
   }
 }
-async function updateEvent(req, res) {
+const updateEvent = async (req, res) => {
   try {
-    const { error } = validateUpdateEvent(req.body);
-    if (error)
-      return res.status(400).json({ message: error.details[0].message });
-    let updateEvent = { ...req.body };
-    const existingEvent = await Event.findById(req.params.id);
-    if (!existingEvent) {
-      return res.status(404).json({ message: "Event not found" });
-    }
-    if (req.body.participants) {
-      const participantErrors = [];
-      for (const participantId of req.body.participants) {
-        const user = await User.findById(participantId);
-        if (!user || user.role !== "Participant") {
-          participantErrors.push(participantId);
-        }
-      }
-      if (participantErrors.length > 0) {
-        return res.status(400).json({
-          message: `Invalid participants: ${participantErrors.join(
-            ", "
-          )}. Only users with participant role can be added.`,
-        });
-      }
-    }
-    if (req.file) {
-      const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
+    let participants = Array.isArray(req.body.participants)
+      ? req.body.participants
+      : req.body.participants?.split(",").map((p) => p.trim());
+
+    participants =
+      participants?.filter((p) => /^[0-9a-fA-F]{24}$/.test(p)) || [];
+
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+
+    if (req.files && req.files.image) {
+      const imagePath = path.join(
+        __dirname,
+        `../images/${req.files.image[0].filename}`
+      );
       const result = await cloudinaryUploadImage(imagePath);
-      updateEvent.image = {
+
+      req.body.image = {
         url: result.secure_url,
         publicId: result.public_id,
       };
+
       fs.unlinkSync(imagePath);
-      if (existingEvent.image && existingEvent.image.publicId) {
-        await cloudinaryRemoveImage(existingEvent);
+
+      if (event.image?.publicId) {
+        await cloudinaryRemoveImage(event.image.publicId);
       }
     }
+
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
-      {
-        $set: updateEvent,
-      },
+      { $set: { ...req.body, participants } },
       { new: true }
     ).populate("participants", "name email");
-    if (updatedEvent) {
-      res.status(200).json(updatedEvent);
-    } else {
-      res.status(404).json({ message: "Event not found or failed to update" });
-    }
+
+    res.status(200).json(updatedEvent);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Error updating event:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred", error: error.message });
   }
-}
+};
 
 async function deleteEvent(req, res) {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: "Event not found" });
-    if (event.organizer.toString() !== req.user.id) {
+    if (req.user.role !== "Organisateur") {
       return res
         .status(403)
         .json({ message: "Unauthorized to delete this event" });

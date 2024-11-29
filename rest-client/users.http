@@ -13,7 +13,7 @@ POST http://localhost:8800/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "souaouti.iman@gmail.com",
+  "email": "john@gmail.com",
   "password": "StrongP@ssw0rd123!"
 }
 
